@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import chav1961.purelib.basic.exceptions.CalculationException;
 
-public interface GateMatrix {
+public interface GateMatrix extends AutoCloseable {
 	public static enum MatrixType {
 		COMMITATIONAL_MATRIX,
 		SPARSE_MATRIX,
@@ -18,6 +18,7 @@ public interface GateMatrix {
 		long y();
 		long width();
 		long height();
+		boolean inside(long x, long y);
 		
 		static Piece of(long x, long y, long width, long height) {
 			return new Piece() {
@@ -27,6 +28,11 @@ public interface GateMatrix {
 				@Override public long height() {return height;}
 				
 				@Override
+				public boolean inside(final long x, final long y) {
+					return x >= x() && x < x()+width() && y >= y() && y < y()+height();
+				}
+				
+				@Override
 				public String toString() {
 					return "Piece[x="+x()+",y="+y()+",width="+width()+",height="+height()+"]";
 				}
@@ -34,8 +40,12 @@ public interface GateMatrix {
 		}
 	}
 	
-	long width();
-	long height();
+	
+	long getWidth();
+	long getHeight();
+	MatrixType getType();
+	boolean isFastMode();
+	boolean setFastMode(boolean on);
 	
 	void download(Piece piece, DataInput in) throws IOException;
 	default void download(DataInput in) throws IOException {
@@ -48,6 +58,8 @@ public interface GateMatrix {
 	}
 	
 	GateMatrix multiply(GateMatrix another) throws CalculationException;
+	GateMatrix multiplyAndTranspose(GateMatrix another) throws CalculationException;
+	GateMatrix transpose() throws CalculationException;
 	GateMatrix reduce(int qibitNo, int qubitValue) throws CalculationException;
 	GateMatrix cast(MatrixType type) throws CalculationException;
 
@@ -60,8 +72,11 @@ public interface GateMatrix {
 	default void forEach(ForEachCallback callback) throws CalculationException {
 		forEach(totalPiece(), callback);
 	}
+
+	@Override
+	void close() throws CalculationException;
 	
 	private Piece totalPiece() {
-		return Piece.of(0, 0, width(), height());
+		return Piece.of(0, 0, getWidth(), getHeight());
 	}
 }
