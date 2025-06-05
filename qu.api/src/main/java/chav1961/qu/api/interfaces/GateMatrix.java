@@ -8,9 +8,19 @@ import chav1961.purelib.basic.exceptions.CalculationException;
 
 public interface GateMatrix extends AutoCloseable {
 	public static enum MatrixType {
-		COMMITATIONAL_MATRIX,
-		SPARSE_MATRIX,
-		DENSE_MATRIX,
+		COMMITATIONAL_MATRIX(true),
+		SPARSE_MATRIX(true),
+		DENSE_MATRIX(false);
+		
+		private final boolean	fastMode;
+		
+		private MatrixType(final boolean fastMode) {
+			this.fastMode = fastMode;
+		}
+		
+		public boolean isFastModeSupported() {
+			return fastMode;
+		}
 	}
 	
 	public static interface Piece {
@@ -46,6 +56,8 @@ public interface GateMatrix extends AutoCloseable {
 	MatrixType getType();
 	boolean isFastMode();
 	boolean setFastMode(boolean on);
+	boolean isParallelMode();
+	boolean setParallelMode(boolean on);
 	
 	void download(Piece piece, DataInput in) throws IOException;
 	default void download(DataInput in) throws IOException {
