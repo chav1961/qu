@@ -15,6 +15,7 @@ import chav1961.qu.api.interfaces.GateMatrix;
 
 public class DenseInMemoryGateVector extends AbstractInMemoryGateMatrix {
 	private final double[]	content;
+	private final boolean	isRow;
 	
 	DenseInMemoryGateVector(final long width, final long height, final boolean parallelMode) {
 		this(width, height, parallelMode, new double[(int) (2*height*width)]);
@@ -23,29 +24,48 @@ public class DenseInMemoryGateVector extends AbstractInMemoryGateMatrix {
 	private DenseInMemoryGateVector(final long width, final long height, final boolean parallelMode, final double[] content) {
 		super(MatrixType.DENSE_MATRIX, width, height, parallelMode);
 		this.content = new double[(int) (2*height*width)];
+		this.isRow = height == 1;
 	}
 	
 	@Override
-	protected void downloadInternal(final Piece piece, final DataInput in) throws IOException {
+	protected void downloadInternal(final Piece piece, final DataInput in, final ForEachCallback callback) throws IOException {
 		final double[]	temp = content;
-		final int		start = (int) (piece.width() == 1 ? piece.y() : piece.x());
-		final int		count = (int) (piece.width() == 1 ? piece.height() : piece.width());
+		final int		start = (int) (isRow ? piece.x() : piece.y());
+		final int		count = (int) (isRow ? piece.width() : piece.height());
 		
 		for(int index = 0; index <  count; index++) {
-			temp[2*(start + index)] = in.readDouble();
-			temp[2*(start + index) + 1] = in.readDouble();
+			final double	real = in.readDouble();
+			final double	image = in.readDouble();
+			
+			try {
+				if (callback.process(isRow ? 0 : index, isRow ? index : 0, start, count)) {
+					temp[2*(start + index)] = real;
+					temp[2*(start + index) + 1] = image;
+				}
+			} catch (CalculationException e) {
+				throw new IOException(e.getLocalizedMessage(), e);
+			}
 		}
 	}
 
 	@Override
-	protected void uploadInternal(final Piece piece, final DataOutput out) throws IOException {
+	protected void uploadInternal(final Piece piece, final DataOutput out, final ForEachCallback callback) throws IOException {
 		final double[]	temp = content;
-		final int		start = (int) (piece.width() == 1 ? piece.y() : piece.x());
-		final int		count = (int) (piece.width() == 1 ? piece.height() : piece.width());
+		final int		start = (int) (isRow ? piece.x() : piece.y());
+		final int		count = (int) (isRow ? piece.width() : piece.height());
 		
 		for(int index = 0; index <  count; index++) {
-			out.writeDouble(temp[2*(start + index)]);
-			out.writeDouble(temp[2*(start + index) + 1]);
+			final double	real = temp[2*(start + index)];
+			final double	image = temp[2*(start + index) + 1];
+
+			try {
+				if (callback.process(isRow ? 0 : index, isRow ? index : 0, start, count)) {
+					out.writeDouble(real);
+					out.writeDouble(image);
+				}
+			} catch (CalculationException e) {
+				throw new IOException(e.getLocalizedMessage(), e);
+			}
 		}
 	}
 

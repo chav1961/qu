@@ -9,20 +9,20 @@ import chav1961.qu.api.interfaces.GateMatrix;
 import chav1961.qu.api.interfaces.GateMatrix.ForEachCallback;
 import chav1961.qu.api.interfaces.GateMatrix.Piece;
 
-class InMemoryCommutationalMatrix extends AbstractInMemoryGateMatrix {
+class CommutationalInMemoryMatrix extends AbstractInMemoryGateMatrix {
 	private final int[]	columns;
 
-	InMemoryCommutationalMatrix(final long width, final long height) {
-		this(width, height, new int[(int) height]);
+	CommutationalInMemoryMatrix(final long width, final long height, boolean parallelModeOn) {
+		this(width, height, parallelModeOn, new int[(int) height]);
 	}
 
-	private InMemoryCommutationalMatrix(final long width, final long height, final int[] columns) {
-		super(MatrixType.COMMITATIONAL_MATRIX, width, height);
+	private CommutationalInMemoryMatrix(final long width, final long height, boolean parallelModeOn, final int[] columns) {
+		super(MatrixType.COMMITATIONAL_MATRIX, width, height, parallelModeOn);
 		this.columns = columns;
 	}
 	
 	@Override
-	protected void downloadInternal(final Piece piece, final DataInput in) throws IOException {
+	protected void downloadInternal(final Piece piece, final DataInput in, ForEachCallback callback) throws IOException {
 		final int[]	target = columns;
 		
 		if (isFastMode()) {
@@ -42,7 +42,7 @@ class InMemoryCommutationalMatrix extends AbstractInMemoryGateMatrix {
 	}
 
 	@Override
-	protected void uploadInternal(Piece piece, DataOutput out) throws IOException {
+	protected void uploadInternal(Piece piece, DataOutput out, ForEachCallback callback) throws IOException {
 		final int[]	source = columns;
 		
 		if (isFastMode()) {
@@ -91,7 +91,7 @@ class InMemoryCommutationalMatrix extends AbstractInMemoryGateMatrix {
 		for(int index = 0; index < source.length; index++) {
 			target[source[index]] = index;
 		}
-		return new InMemoryCommutationalMatrix(getHeight(), getWidth(), target);
+		return new CommutationalInMemoryMatrix(getHeight(), getWidth(), isParallelMode(), target);
 	}
 
 	@Override
@@ -106,7 +106,7 @@ class InMemoryCommutationalMatrix extends AbstractInMemoryGateMatrix {
 				target[where++] = source[index];
 			}
 		}
-		return new InMemoryCommutationalMatrix(getHeight(), getWidth(), target);
+		return new CommutationalInMemoryMatrix(getHeight(), getWidth(), isParallelMode(), target);
 	}
 
 	@Override
@@ -130,5 +130,35 @@ class InMemoryCommutationalMatrix extends AbstractInMemoryGateMatrix {
 	@Override
 	public void close() throws CalculationException {
 		super.close();
+	}
+
+	@Override
+	protected GateMatrix multiplyInternalP(GateMatrix another) throws CalculationException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected GateMatrix multiplyAndTransposeInternalP(GateMatrix another) throws CalculationException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected GateMatrix transposeInternalP() throws CalculationException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected GateMatrix reduceInternalP(int qubitNo, int qubitValue) throws CalculationException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected void forEachInternalP(Piece piece, ForEachCallback callback) throws CalculationException {
+		// TODO Auto-generated method stub
+		
 	}
 }

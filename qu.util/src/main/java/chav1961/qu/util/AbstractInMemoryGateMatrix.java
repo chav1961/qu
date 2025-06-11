@@ -13,7 +13,7 @@ abstract class AbstractInMemoryGateMatrix extends AbstractGateMatrix {
 		
 	}
 
-	protected void calcAndAdd(final double leftReal, final double leftImage, final ComplexOp op, final double rightReal, final double rightImage, final double[] result, final int resultIndex) {
+	protected static void calcAndAdd(final double leftReal, final double leftImage, final ComplexOp op, final double rightReal, final double rightImage, final double[] result, final int resultIndex) {
 		switch (op) {
 			case ADD		:
 				result[resultIndex] += leftReal + rightReal;

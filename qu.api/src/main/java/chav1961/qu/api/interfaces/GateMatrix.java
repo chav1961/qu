@@ -58,13 +58,24 @@ public interface GateMatrix extends AutoCloseable {
 	boolean setFastMode(boolean on);
 	boolean isParallelMode();
 	boolean setParallelMode(boolean on);
-	
-	void download(Piece piece, DataInput in) throws IOException;
+
+	@FunctionalInterface
+	public interface ForEachCallback {
+		boolean process(long x, long y, double real, double image) throws CalculationException;
+	}
+
+	void download(Piece piece, DataInput in, ForEachCallback callback) throws IOException;
+	default void download(Piece piece, DataInput in) throws IOException {
+		download(piece, in, (x,y,r,i)->true);
+	}
 	default void download(DataInput in) throws IOException {
 		download(totalPiece(), in);
 	}
 	
-	void upload(Piece piece, DataOutput out) throws IOException;
+	void upload(Piece piece, DataOutput out, ForEachCallback callback) throws IOException;
+	default void upload(Piece piece, DataOutput out) throws IOException {
+		upload(piece, out, (x,y,r,i)->true);
+	}
 	default void upload(DataOutput out) throws IOException {
 		upload(totalPiece(), out);
 	}
@@ -75,11 +86,6 @@ public interface GateMatrix extends AutoCloseable {
 	GateMatrix reduce(int qibitNo, int qubitValue) throws CalculationException;
 	GateMatrix cast(MatrixType type) throws CalculationException;
 
-	@FunctionalInterface
-	public interface ForEachCallback {
-		boolean process(long x, long y, double real, double image) throws CalculationException;
-	}
-	
 	void forEach(Piece piece, ForEachCallback callback) throws CalculationException;
 	default void forEach(ForEachCallback callback) throws CalculationException {
 		forEach(totalPiece(), callback);

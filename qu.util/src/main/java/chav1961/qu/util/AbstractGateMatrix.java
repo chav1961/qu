@@ -48,8 +48,8 @@ public abstract class AbstractGateMatrix implements GateMatrix {
 	}
 
 	public abstract void close() throws CalculationException;
-	protected abstract void downloadInternal(Piece piece, DataInput in) throws IOException;
-	protected abstract void uploadInternal(Piece piece, DataOutput out) throws IOException;
+	protected abstract void downloadInternal(Piece piece, DataInput in, ForEachCallback callback) throws IOException;
+	protected abstract void uploadInternal(Piece piece, DataOutput out, ForEachCallback callback) throws IOException;
 	
 	protected abstract GateMatrix multiplyInternal(GateMatrix another) throws CalculationException;
 	protected abstract GateMatrix multiplyAndTransposeInternal(GateMatrix another) throws CalculationException;
@@ -115,28 +115,34 @@ public abstract class AbstractGateMatrix implements GateMatrix {
 	}
 	
 	@Override
-	public void download(final Piece piece, final DataInput in) throws IOException {
+	public void download(final Piece piece, final DataInput in, final ForEachCallback callback) throws IOException {
 		if (piece == null || !isPieceValid(piece)) {
 			throw new IllegalArgumentException("Piece is null or not inside the matrix");
 		}
 		else if (in == null) {
 			throw new NullPointerException("Data input can't be null");
 		}
+		else if (callback == null) {
+			throw new NullPointerException("Callback can't be null");
+		}
 		else {
-			downloadInternal(piece, in);
+			downloadInternal(piece, in, callback);
 		}
 	}
 
 	@Override
-	public void upload(final Piece piece, final DataOutput out) throws IOException {
+	public void upload(final Piece piece, final DataOutput out, final ForEachCallback callback) throws IOException {
 		if (piece == null || !isPieceValid(piece)) {
 			throw new IllegalArgumentException("Piece is null or not inside the matrix");
 		}
 		else if (out == null) {
 			throw new NullPointerException("Data output can't be null");
 		}
+		else if (callback == null) {
+			throw new NullPointerException("Callback can't be null");
+		}
 		else {
-			uploadInternal(piece, out);
+			uploadInternal(piece, out, callback);
 		}
 	}
 
