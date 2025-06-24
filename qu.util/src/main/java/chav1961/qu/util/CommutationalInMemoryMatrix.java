@@ -6,8 +6,6 @@ import java.io.IOException;
 
 import chav1961.purelib.basic.exceptions.CalculationException;
 import chav1961.qu.api.interfaces.GateMatrix;
-import chav1961.qu.api.interfaces.GateMatrix.ForEachCallback;
-import chav1961.qu.api.interfaces.GateMatrix.Piece;
 
 class CommutationalInMemoryMatrix extends AbstractInMemoryGateMatrix {
 	private final int[]	columns;
