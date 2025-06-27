@@ -6,15 +6,22 @@ import java.io.IOException;
 
 import chav1961.purelib.basic.exceptions.CalculationException;
 import chav1961.qu.api.interfaces.GateMatrix;
-import chav1961.qu.api.interfaces.GateMatrix.ForEachCallback;
+import chav1961.qu.api.interfaces.GateMatrixType;
+import chav1961.qu.api.interfaces.Piece;
 
-public class SparseInMemoryGateMatrix extends AbstractInMemoryGateMatrix{
+public class SparseInMemoryFloatGateMatrix extends AbstractInMemoryGateMatrix{
 
-	SparseInMemoryGateMatrix(MatrixType type, long width, long height, boolean parallelModeOn) {
-		super(MatrixType.SPARSE_MATRIX, width, height, parallelModeOn);
+	SparseInMemoryFloatGateMatrix(GateMatrixType type, long width, long height, boolean parallelModeOn) {
+		super(GateMatrixType.SPARSE_MATRIX, width, height, parallelModeOn);
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
+	public Class<?> getValueClass() {
+		return float.class;
+	}
+
+	
 	@Override
 	protected void downloadInternal(Piece piece, DataInput in, final ForEachCallback callback) throws IOException {
 		// TODO Auto-generated method stub

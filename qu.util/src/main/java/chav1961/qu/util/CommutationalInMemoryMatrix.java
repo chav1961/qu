@@ -6,6 +6,8 @@ import java.io.IOException;
 
 import chav1961.purelib.basic.exceptions.CalculationException;
 import chav1961.qu.api.interfaces.GateMatrix;
+import chav1961.qu.api.interfaces.GateMatrixType;
+import chav1961.qu.api.interfaces.Piece;
 
 class CommutationalInMemoryMatrix extends AbstractInMemoryGateMatrix {
 	private final int[]	columns;
@@ -15,7 +17,7 @@ class CommutationalInMemoryMatrix extends AbstractInMemoryGateMatrix {
 	}
 
 	private CommutationalInMemoryMatrix(final long width, final long height, boolean parallelModeOn, final int[] columns) {
-		super(MatrixType.COMMITATIONAL_MATRIX, width, height, parallelModeOn);
+		super(GateMatrixType.COMMITATION_MATRIX, width, height, parallelModeOn);
 		this.columns = columns;
 	}
 	
@@ -130,6 +132,11 @@ class CommutationalInMemoryMatrix extends AbstractInMemoryGateMatrix {
 		super.close();
 	}
 
+	@Override
+	public Class<?> getValueClass() {
+		return int.class;
+	}
+	
 	@Override
 	protected GateMatrix multiplyInternalP(GateMatrix another) throws CalculationException {
 		// TODO Auto-generated method stub

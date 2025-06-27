@@ -9,7 +9,7 @@ import chav1961.purelib.basic.exceptions.SyntaxException;
 import chav1961.qu.api.interfaces.GateDescriptor;
 import chav1961.qu.api.interfaces.GateDescriptor.GateType;
 import chav1961.qu.api.interfaces.GateMatrix;
-import chav1961.qu.api.interfaces.GateMatrix.MatrixType;
+import chav1961.qu.api.interfaces.GateMatrixType;
 import chav1961.qu.api.interfaces.QubitDescriptor;
 import chav1961.qu.util.GateDescriptionParser.Gate;
 
@@ -93,7 +93,7 @@ public class QuantumUtils {
 						
 						@Override
 						public GateMatrix getMatrix() {
-							return buildGateMatrix(this, MatrixType.COMMITATIONAL_MATRIX);
+							return buildGateMatrix(this, GateMatrixType.COMMITATION_MATRIX);
 						}
 						
 						@Override
@@ -132,7 +132,7 @@ public class QuantumUtils {
 		}
 	}
 	
-	private static GateMatrix buildGateMatrix(final GateDescriptor desc, final MatrixType preferredMatrixType) {
+	private static GateMatrix buildGateMatrix(final GateDescriptor desc, final GateMatrixType preferredMatrixType) {
 		if (desc == null) {
 			throw new NullPointerException("Gate descriptor can't be null");
 		}

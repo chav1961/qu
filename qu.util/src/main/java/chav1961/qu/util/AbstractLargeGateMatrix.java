@@ -10,12 +10,14 @@ import java.nio.file.StandardOpenOption;
 
 import chav1961.purelib.basic.exceptions.CalculationException;
 import chav1961.qu.api.interfaces.GateMatrix;
+import chav1961.qu.api.interfaces.GateMatrixType;
+import chav1961.qu.api.interfaces.Piece;
 
 class AbstractLargeGateMatrix extends AbstractGateMatrix {
 	private final File			file;
 	private final FileChannel	channel;
 	
-	protected AbstractLargeGateMatrix(final MatrixType type, final long width, final long height) throws CalculationException {
+	protected AbstractLargeGateMatrix(final GateMatrixType type, final long width, final long height) throws CalculationException {
 		super(type, width, height);
 		try {
 			this.file = File.createTempFile("temp", ".matrix");

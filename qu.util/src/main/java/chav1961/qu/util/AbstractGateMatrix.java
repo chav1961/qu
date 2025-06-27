@@ -8,11 +8,13 @@ import java.io.IOException;
 
 import chav1961.purelib.basic.exceptions.CalculationException;
 import chav1961.qu.api.interfaces.GateMatrix;
+import chav1961.qu.api.interfaces.GateMatrixType;
+import chav1961.qu.api.interfaces.Piece;
 
 public abstract class AbstractGateMatrix implements GateMatrix {
 	private static final int	NUMBER_OF_PROCESSORS = Runtime.getRuntime().availableProcessors();
 	
-	private final MatrixType	type;
+	private final GateMatrixType	type;
 	private final long			width;
 	private final long			height;
 	private final boolean		parallelModeEnable;
@@ -26,7 +28,7 @@ public abstract class AbstractGateMatrix implements GateMatrix {
 		DIVIDE
 	}
 	
-	protected AbstractGateMatrix(final MatrixType type, final long width, final long height, final boolean parallelModeEnable) {
+	protected AbstractGateMatrix(final GateMatrixType type, final long width, final long height, final boolean parallelModeEnable) {
 		if (type == null) {
 			throw new NullPointerException("Matrix type can't be null");
 		}
@@ -74,7 +76,7 @@ public abstract class AbstractGateMatrix implements GateMatrix {
 	}
 
 	@Override
-	public MatrixType getType() {
+	public GateMatrixType getType() {
 		return type;
 	}
 
@@ -203,14 +205,14 @@ public abstract class AbstractGateMatrix implements GateMatrix {
 	}
 
 	@Override
-	public GateMatrix cast(final MatrixType type) throws CalculationException {
+	public GateMatrix cast(final GateMatrixType type) throws CalculationException {
 		// TODO Auto-generated method stub
 		if (type == null) {
 			throw new NullPointerException("Matrix type can't be null");
 		}
 		else {
 			switch (type) {
-				case COMMITATIONAL_MATRIX	:
+				case COMMITATION_MATRIX	:
 					break;
 				case DENSE_MATRIX	:
 					break;
