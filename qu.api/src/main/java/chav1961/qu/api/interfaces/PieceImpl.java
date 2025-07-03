@@ -36,7 +36,10 @@ class PieceImpl implements Piece {
 
 	@Override
 	public boolean inside(final long x, final long y) {
-		return x >= x() && x < x()+width() && y >= y() && y < y()+height();
+		return 	x >= x() 
+				&& x < x()+width() 
+				&& y >= y() 
+				&& y < y()+height();
 	}
 
 	@Override
@@ -49,9 +52,9 @@ class PieceImpl implements Piece {
 		}
 		else {
 			final boolean ulInside = inside(another.x(),another.y());
-			final boolean urInside = inside(another.x()+another.width(),another.y());
-			final boolean dlInside = inside(another.x(),another.y()+another.height());
-			final boolean drInside = inside(another.x()+another.width(),another.y()+another.height());
+			final boolean urInside = inside(another.x()+another.width()-1,another.y());
+			final boolean dlInside = inside(another.x(),another.y()+another.height()-1);
+			final boolean drInside = inside(another.x()+another.width()-1,another.y()+another.height()-1);
 
 			if (ulInside && drInside) {
 				return Relation.INSIDE;

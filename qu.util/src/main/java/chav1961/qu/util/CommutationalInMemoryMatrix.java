@@ -60,21 +60,38 @@ class CommutationalInMemoryMatrix extends AbstractInMemoryGateMatrix {
 	}
 
 	@Override
-	protected GateMatrix multiplyInternal(GateMatrix another) throws CalculationException  {
+	protected GateMatrix multiplyInternal(final GateMatrix another) throws CalculationException  {
 		// TODO Auto-generated method stub
-		final boolean	wasFast = another.setFastMode(false);
 		
 		if (another instanceof AbstractInMemoryGateMatrix) {
+			switch (another.getType()) {
+				case COMMITATION_MATRIX	:
+					return multiplyInternal((CommutationalInMemoryMatrix)another);
+				case SPARSE_MATRIX	:
+					if (another.getValueClass() == float.class) {
+						return multiplyInternal((SparseInMemoryFloatGateMatrix)another);
+					}
+					break;
+				case DENSE_MATRIX	:
+					if (another.getValueClass() == float.class) {
+						return multiplyInternal((DenseInMemoryFloatGateMatrix)another);
+					}
+					break;
+				default:
+					throw new UnsupportedOperationException("Matrix type to multiply ["+another.getType()+"] is not supported yet");
+			}
 		}
 		else {
+			final boolean	wasFast = another.setFastMode(false);
+
 			if (isVector(another)) {
 				
 				another.forEach(null);
 			}
 			else {
 			}
+			another.setFastMode(wasFast);
 		}
-		another.setFastMode(wasFast);
 		return null;
 	}
 
@@ -165,5 +182,20 @@ class CommutationalInMemoryMatrix extends AbstractInMemoryGateMatrix {
 	protected void forEachInternalP(Piece piece, ForEachCallback callback) throws CalculationException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	private GateMatrix multiplyInternal(final CommutationalInMemoryMatrix another) throws CalculationException  {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private GateMatrix multiplyInternal(final SparseInMemoryFloatGateMatrix another) throws CalculationException  {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private GateMatrix multiplyInternal(final DenseInMemoryFloatGateMatrix another) throws CalculationException  {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

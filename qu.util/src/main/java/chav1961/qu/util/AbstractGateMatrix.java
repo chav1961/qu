@@ -304,10 +304,10 @@ public abstract class AbstractGateMatrix implements GateMatrix {
 		else if (piece.y() < 0 || piece.y() >= getHeight()) {
 			return false;
 		}
-		else if (piece.x() + piece.width() < 0 || piece.x() + piece.width() >= getWidth()) {
+		else if (piece.x() + piece.width() <= 0 || piece.x() + piece.width() > getWidth()) {
 			return false;
 		}
-		else if (piece.y() + piece.height() < 0 || piece.y() + piece.height() >= getHeight()) {
+		else if (piece.y() + piece.height() <= 0 || piece.y() + piece.height() > getHeight()) {
 			return false;
 		}
 		else {
